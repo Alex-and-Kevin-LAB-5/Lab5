@@ -4,7 +4,6 @@ window.addEventListener('DOMContentLoaded', init);
 
 
 function init() {
-  // TODO
   const synth = window.speechSynthesis;
   const voiceSelect = document.getElementById("voice-select");
   const button = document.querySelector('button');
@@ -13,6 +12,7 @@ function init() {
   let voices = [];
   var text;
   var voiceValue;
+  var change = false;
 
   function populateVoiceList() {
     voices = synth.getVoices();
@@ -38,6 +38,7 @@ function init() {
 
   var utterThis;
   textInput.addEventListener('input', (event) => {
+    change = true;
     text = event.target.value;
   })
 
@@ -50,7 +51,9 @@ function init() {
     utterThis = new SpeechSynthesisUtterance(text);
     utterThis.voice = voices[voiceValue];
     utterThis.volume = 1.0;
-    synth.speak(utterThis);
+    if (change === true) {
+      synth.speak(utterThis);
+    }
   })
   setInterval(()=>{
     if(synth.speaking == true) {
@@ -59,5 +62,5 @@ function init() {
     if(synth.speaking != true) {
       imag.src = "assets/images/smiling.png";
     }
-  },1)
+  },100)
 }

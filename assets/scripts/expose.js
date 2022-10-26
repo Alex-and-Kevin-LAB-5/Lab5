@@ -3,7 +3,6 @@
 window.addEventListener('DOMContentLoaded', init);
 
 function init() {
-  // TODO
   const Horn = document.getElementById('horn-select');
   const imag = document.querySelector("[src='assets/images/no-image.png']");
   const audios = document.getElementsByClassName("hidden");
