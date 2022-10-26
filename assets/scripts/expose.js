@@ -12,9 +12,12 @@ function init() {
   const slider  = document.getElementById("volume-controls");
   const icon = document.querySelector("[alt='Volume level 2']");
   const jsConfetti = new JSConfetti();
+  var hornName;
+  var changed = false;
 
   Horn.addEventListener('change', (event) => {
-    var hornName = event.target.value;
+    changed = true;
+     hornName = event.target.value;
     if (hornName === "air-horn") {
       imag.src = "assets/images/air-horn.svg";
       audio.src = "assets/audio/air-horn.mp3";
@@ -27,14 +30,16 @@ function init() {
       imag.src = "assets/images/party-horn.svg";
       audio.src = "assets/audio/party-horn.mp3";
     }
-    button.addEventListener('click', (event) => {
-      if(hornName === "party-horn") {
-        jsConfetti.addConfetti();
-      }
-      audio.play();
-    })
+    
   })
-
+  button.addEventListener('click', (event) => {
+    if(hornName === "party-horn") {
+      jsConfetti.addConfetti();
+    }
+    if(changed === true) {
+      audio.play();
+    }
+  })
   slider.addEventListener('change', (event) => {
     var volumeNum = event.target.value;
     audio.volume = event.target.value/100;
@@ -48,7 +53,6 @@ function init() {
       icon.src = "assets/icons/volume-level-2.svg";
     }
     else {icon.src = "assets/icons/volume-level-3.svg";}
-    console.log(volumeNum);
   })
 
 }
