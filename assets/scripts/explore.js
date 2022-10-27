@@ -13,6 +13,7 @@ function init() {
   var text;
   var voiceValue;
   var change = false;
+  var textinput = false;
 
   function populateVoiceList() {
     voices = synth.getVoices();
@@ -38,12 +39,13 @@ function init() {
 
   var utterThis;
   textInput.addEventListener('input', (event) => {
-    change = true;
+    textinput = true;
     text = event.target.value;
   })
 
   
   voiceSelect.addEventListener('change', (event) => {
+    change = true;
     voiceValue = event.target.value;
   })
     
@@ -51,15 +53,15 @@ function init() {
     utterThis = new SpeechSynthesisUtterance(text);
     utterThis.voice = voices[voiceValue];
     utterThis.volume = 1.0;
-    if (change === true) {
+    if (change === true && textinput === true && text !== '') {
       synth.speak(utterThis);
     }
   })
   setInterval(()=>{
-    if(synth.speaking == true) {
+    if(synth.speaking === true) {
       imag.src = "assets/images/smiling-open.png";
     }
-    if(synth.speaking != true) {
+    if(synth.speaking !== true) {
       imag.src = "assets/images/smiling.png";
     }
   },100)
