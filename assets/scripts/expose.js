@@ -40,8 +40,9 @@ function init() {
     }
   })
   slider.addEventListener('change', (event) => {
-    var volumeNum = event.target.value;
     audio.volume = event.target.value/100;
+    var volumeNum = event.target.value;
+    
     if (volumeNum == 0) {
       icon.src = "assets/icons/volume-level-0.svg";
     }
