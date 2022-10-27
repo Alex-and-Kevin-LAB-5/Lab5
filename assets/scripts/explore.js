@@ -2,82 +2,67 @@
 
 window.addEventListener('DOMContentLoaded', init);
 
+
 function init() {
-  // DONE
   const synth = window.speechSynthesis;
-  const voiceSelectList = document.getElementById("voice-select");
-  const talkButton = document.querySelector("button");
-  const textToSpeak = document.getElementById("text-to-speak");
-  const selectedVoice = document.querySelector("select");
-  const currentImage = document.querySelector("[alt='Smiling face']");
-
-  var voices = [];
-
-  let canSpeak = false;
-
-  let utterThis = new SpeechSynthesisUtterance(textToSpeak.placeholder);
-
-  selectedVoice.addEventListener("change", updateVoice);
-  textToSpeak.addEventListener("input", updateText);
-  talkButton.addEventListener("click", talkToWorld);
-
-
+  const voiceSelect = document.getElementById("voice-select");
+  const button = document.querySelector('button');
+  const textInput = document.getElementById('text-to-speak');
+  const imag = document.querySelector('[alt="Smiling face"]');
+  let voices = [];
+  var text;
+  var voiceValue;
+  var change = false;
+  var textinput = false;
 
   function populateVoiceList() {
-    if (typeof speechSynthesis === 'undefined') {
-      return;
-    }
-
     voices = synth.getVoices();
 
     for (let i = 0; i < voices.length; i++) {
+
       const option = document.createElement('option');
       option.textContent = `${voices[i].name} (${voices[i].lang})`;
       option.value = i;
-
       if (voices[i].default) {
         option.textContent += ' — DEFAULT';
       }
 
       option.setAttribute('data-lang', voices[i].lang);
       option.setAttribute('data-name', voices[i].name);
-      voiceSelectList.appendChild(option);
+      voiceSelect.appendChild(option);
     }
   }
-
   populateVoiceList();
-  if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+  if (speechSynthesis.onvoiceschanged !== undefined) {
     speechSynthesis.onvoiceschanged = populateVoiceList;
   }
 
-  function updateVoice() {
-    utterThis.voice = voices[selectedVoice.value];
-    utterThis.lang = voices[selectedVoice.value].lang;
-  }
+  var utterThis;
+  textInput.addEventListener('input', (event) => {
+    textinput = true;
+    text = event.target.value;
+  })
 
-  function talkToWorld() {
-    if (textToSpeak.placeholder == "") {
-      return;
-    }
-    if (canSpeak) {
-      currentImage.src = "assets/images/smiling-open.png";
+
+  voiceSelect.addEventListener('change', (event) => {
+    change = true;
+    voiceValue = event.target.value;
+  })
+
+  button.addEventListener('click', () => {
+    utterThis = new SpeechSynthesisUtterance(text);
+    utterThis.voice = voices[voiceValue];
+    utterThis.volume = 1.0;
+    if (change === true && textinput === true && text !== '') {
       synth.speak(utterThis);
     }
-    setInterval(stoppedSpeaking, 500);
-  }
-
-  function updateText() {
-    canSpeak = true;
-    textToSpeak.placeholder = textToSpeak.value;
-    utterThis.text = textToSpeak.placeholder;
-  }
-
-  function stoppedSpeaking() {
-    if (textToSpeak.placeholder == "") {
-      return;
+  })
+  setInterval(() => {
+    if (synth.speaking === true) {
+      imag.src = "assets/images/smiling-open.png";
     }
-    if (synth.speaking == false) {
-      currentImage.src = "assets/images/smiling.png";
+    if (synth.speaking !== true) {
+      imag.src = "assets/images/smiling.png";
     }
-  }
+  }, 100)
 }
