@@ -40,7 +40,7 @@ function init() {
     }
   })
   slider.addEventListener('change', (event) => {
-    audio.volume = event.target.value/100;
+    
     var volumeNum = event.target.value;
     
     if (volumeNum == 0) {
@@ -53,6 +53,7 @@ function init() {
       icon.src = "assets/icons/volume-level-2.svg";
     }
     else {icon.src = "assets/icons/volume-level-3.svg";}
+    audio.volume = event.target.value/100;
   })
 
 }
